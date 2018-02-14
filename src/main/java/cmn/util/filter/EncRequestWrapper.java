@@ -1,4 +1,4 @@
-package kics.framework.filter;
+package cmn.util.filter;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -17,9 +17,6 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import kics.framework.constant.KicsDefaultConstants;
-import kics.framework.exception.KicsRuntimeException;
-import kics.framework.util.Util;
 import xecure.crypto.Cipher;
 import xecure.servlet.XecureConfig;
 import xecure.servlet.XecureSession;
@@ -34,12 +31,12 @@ public class EncRequestWrapper extends HttpServletRequestWrapper {
 	private String requestBody = null;
 	
 	/* Default Character Set */
-	private static final String DEFAULT_ENCODING = KicsDefaultConstants.DEFAULT_ENCODING;
+	private static final String DEFAULT_ENCODING = DefaultConstants.DEFAULT_ENCODING;
 	
 	/** Encoding Character **/
 	private String encoding = null;
 
-	public KicsEncRequestWrapper(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public EncRequestWrapper(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		super(request);
 
 		this.encoding = DEFAULT_ENCODING;
@@ -47,7 +44,7 @@ public class EncRequestWrapper extends HttpServletRequestWrapper {
 	}
 	
 
-	public KicsEncRequestWrapper(HttpServletRequest request, HttpServletResponse response, String encoding) throws IOException {
+	public EncRequestWrapper(HttpServletRequest request, HttpServletResponse response, String encoding) throws IOException {
 		
 		super(request);
 		this.encoding = encoding;
