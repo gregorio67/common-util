@@ -15,9 +15,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.servlet.view.AbstractView;
 
-import taxris.framework.constants.DefaultConstants;
-import taxris.framework.exception.LRuntimeException;
-import taxris.framework.util.FileUtil;
 
 public class FileDownloadView extends AbstractView implements InitializingBean{
 
