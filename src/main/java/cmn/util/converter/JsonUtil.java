@@ -157,17 +157,4 @@ public class JsonUtil {
 
 		return jsonData;
 	}
-	
-//	public static void main(String args[]) throws Exception {
-//		TestVo testVo = new TestVo();
-//		
-//		testVo.setId("aaaa");
-//		testVo.setName("김도연");
-//		testVo.setAge(30);
-//		
-//		String json = object2Json(testVo);
-//		System.out.println(json);
-//		
-//	}
-	
 }
