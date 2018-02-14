@@ -1,4 +1,4 @@
-package taxris.framework.batch.mybatis;
+
 
 import static org.springframework.util.Assert.notNull;
 import static org.springframework.util.ClassUtils.getShortName;
