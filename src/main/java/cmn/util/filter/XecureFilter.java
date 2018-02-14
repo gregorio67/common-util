@@ -1,4 +1,4 @@
-package kics.framework.filter;
+
 
 import java.io.IOException;
 
@@ -14,8 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import kics.framework.constant.KicsDefaultConstants;
-import kics.framework.util.Util;
+
 import xecure.crypto.Cipher;
 import xecure.servlet.XecureConfig;
 import xecure.servlet.XecureSession;
@@ -25,8 +24,8 @@ import xecure.servlet.XecureSession;
 
 public class XecureFilter implements Filter {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(KicsXecureFilter.class);
-	private String encoding = KicsDefaultConstants.DEFAULT_ENCODING;
+	private static final Logger LOGGER = LoggerFactory.getLogger(XecureFilter.class);
+	private String encoding = sDefaultConstants.DEFAULT_ENCODING;
 	
 	@Override
 	public void destroy() {
@@ -38,9 +37,9 @@ public class XecureFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)	throws IOException, ServletException {
 		
-		KicsEncRequestWrapper kicsReqWrapper = new KicsEncRequestWrapper((HttpServletRequest)request, (HttpServletResponse) response);		
+		EncRequestWrapper reqWrapper = new EncRequestWrapper((HttpServletRequest)request, (HttpServletResponse) response);		
 		
-		KicsEncResponseWrapper kicsResWrapper = new KicsEncResponseWrapper((HttpServletResponse) response);
+		EncResponseWrapper resWrapper = new EncResponseWrapper((HttpServletResponse) response);
 		
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Request Wrapper and Response Wrapper is created..");
