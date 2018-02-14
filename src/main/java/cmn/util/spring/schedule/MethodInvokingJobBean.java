@@ -1,4 +1,3 @@
-package taxris.framework.schedule;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -11,7 +10,6 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.util.Assert;
 import org.springframework.util.MethodInvoker;
 
-import taxris.framework.util.ApplicationContextProvider;
 
 @PersistJobDataAfterExecution
 @DisallowConcurrentExecution
