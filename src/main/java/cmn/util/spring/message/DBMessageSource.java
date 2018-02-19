@@ -75,3 +75,15 @@ public class DBMessageSource extends DatabaseMessageSource {
 		
 	}
 }
+
+/**
+	<!-- Set Database Message source configuration -->
+	<bean id="dbMessageSource" class="cmn.util.spring.message.DBMessageSource" init-method="init">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="defaultSql" value="SELECT MSG_CD, LANG_CD, MSG FROM CM_MESSAGE2 WHERE MSG_TYPE='MSG' AND USE_FLAG='Y'" />
+		<property name="localeColumnName" value="LANG_CD" />
+		<property name="msgCodeColumnName" value="MSG_CD" />
+		<property name="msgColumnName" value="MSG" />
+		<property name="tableType" value="row" />
+	</bean>
+**/
