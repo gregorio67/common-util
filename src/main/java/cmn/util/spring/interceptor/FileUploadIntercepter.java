@@ -1,7 +1,9 @@
+package cmn.util.spring.interceptor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +11,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;	
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,18 +20,16 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import taxris.framework.collection.FileUploadVo;
-import taxris.framework.constants.DefaultConstants;
-import taxris.framework.exception.LRuntimeException;
-import taxris.framework.util.ApplicationContextProvider;
-import taxris.framework.util.FileUploadSpec;
-import taxris.framework.util.FileUtil;
-import taxris.framework.util.NullUtil;
+import cmn.util.base.BaseConstants;
+import cmn.util.common.NullUtil;
+import cmn.util.exception.UtilException;
+import cmn.util.file.FileUploadSpec;
+import cmn.util.file.FileUtil;
+import cmn.util.spring.ApplicationContextProvider;
 
 
-public class FileUploadIntercepter extends HandlerInterceptorAdapter {
-
-	private static final Logger LOGGER = LogManager.getLogger(FileUploadIntercepter.class);
+public class FileUploadInterceptor extends HandlerInterceptorAdapter {
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileUploadInterceptor.class);
 	
 	private FileUploadSpec uploadSpec = null;
 	
@@ -50,7 +50,7 @@ public class FileUploadIntercepter extends HandlerInterceptorAdapter {
 			/** Upload Spec **/
 			String policy = request.getParameter("ploicy");
 			if (NullUtil.isNull(policy)) {
-				policy = DefaultConstants.DEFAULT_FILE_UPLOAD_POLICY;
+				policy = BaseConstants.DEFAULT_FILE_UPLOAD_POLICY;
 			}
 			
 			@SuppressWarnings("unchecked")
@@ -58,10 +58,10 @@ public class FileUploadIntercepter extends HandlerInterceptorAdapter {
 						
 			if ( NullUtil.isNone(filePolicy) ) {
 				LOGGER.error("File upload policy is not exists.");
-				throw new LRuntimeException("File upload policy is not exists");
+				throw new UtilException("File upload policy is not exists");
 			}
 
-	    	List<FileUploadVo> fileInfoList = new ArrayList<FileUploadVo>();
+	    	List<Map<String, Object>> fileInfoList = new ArrayList<Map<String, Object>>();
 	    	
 	    	// 오류 발생시 upload된 파일을 삭제하기 위해.
 	    	ArrayList<File> cleanupBuffer = new ArrayList<File>();
@@ -84,29 +84,29 @@ public class FileUploadIntercepter extends HandlerInterceptorAdapter {
 	
 		    		if ( !"".equals( multipartFile.getOriginalFilename() ) ) {
 		    			
-		    			FileUploadVo uploadVo = new FileUploadVo();
+		    			Map<String, Object> uploadMap = new HashMap<String, Object>();
 		    			
 		    			String fileName = multipartFile.getOriginalFilename();
-		    			uploadVo.setOrgFileName(fileName);
+		    			uploadMap.put("orgFileName", fileName);
 		    			
 		    			if (!uploadSpec.isAllowed(fileName)) {
-		    				throw new LRuntimeException("This file is not allowed");
+		    				throw new UtilException("This file is not allowed");
 		    			}
 		    			
 		    			if (uploadSpec.isDenied(fileName)) {
-		    				throw new LRuntimeException("This file is not allowed");
+		    				throw new UtilException("This file is not allowed");
 		    			}
 		    			
 		    			long fileSize = multipartFile.getSize();
 		    			if (uploadSpec.isFileSizeExceed(fileSize)) {
-		    				throw new LRuntimeException("This file is not allowed because file size exceeded :[" + fileSize + "]");		    				
+		    				throw new UtilException("This file is not allowed because file size exceeded :[" + fileSize + "]");		    				
 		    			}
-		    			uploadVo.setFileSize(fileSize);
+		    			uploadMap.put("fileSize", fileSize);
 		    			
 		    			totalFileSize +=  fileSize;
 		    			
 		    			String uploadDir = uploadSpec.getUploadDir();
-		    			uploadVo.setTargetPath(uploadDir);
+		    			uploadMap.put("targetPath", uploadDir);
 		    			
 		    			File file = new File(uploadDir + fileName);
 		    			cleanupBuffer.add(file);
@@ -126,7 +126,7 @@ public class FileUploadIntercepter extends HandlerInterceptorAdapter {
 		    					}
 		    				}
 		    			}
-			    		fileInfoList.add(uploadVo);
+			    		fileInfoList.add(uploadMap);
 		    		}		                
 		    		filecnt++;
 		    	}
@@ -147,9 +147,9 @@ public class FileUploadIntercepter extends HandlerInterceptorAdapter {
 	            }
 	            // 파일 경로 노출 보안 조치
 				if ( ex instanceof FileNotFoundException ) {
-					throw new LRuntimeException("File doesn't exist");
+					throw new UtilException("File doesn't exist");
 				}
-				throw new LRuntimeException(ex.getMessage());
+				throw new UtilException(ex.getMessage());
 				
 			}	    	
 	    	request.setAttribute( "fileInfo", fileInfoList );
@@ -179,5 +179,4 @@ public class FileUploadIntercepter extends HandlerInterceptorAdapter {
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 
 	}
-
 }
