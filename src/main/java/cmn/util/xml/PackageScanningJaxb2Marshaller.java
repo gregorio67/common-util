@@ -76,3 +76,16 @@ public class PackageScanningJaxb2Marshaller  extends Jaxb2Marshaller{
     }
 
 }
+
+
+/** How to Set
+    File Name :  mvc-servlet-context.xml 
+	<!-- XML Converter -->
+	<bean id="jaxbMarshaller" class="stis.framework.spring.xml.PackageScanningJaxb2Marshaller">
+	    <property name="basePackages">
+		    <list>
+			    <value>xxx.sb.sample</value>
+		    </list>
+		</property>
+	</bean>	
+**/
