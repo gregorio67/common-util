@@ -112,3 +112,25 @@ public class SftpUtil {
     }    
     
 }
+
+
+/**
+* Configuration
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+	
+	<!-- SFTP UTIL -->
+    <bean id="sftpUtil" class="kics.framework.ftp.KicsSftpUtil">
+        <property name="kicsSftpChannel" ref="kicsSftpChannel" />
+    </bean>
+
+    <!-- SFTP Channel -->              
+    <bean id="kicsSftpChannel" class="kics.framework.ftp.KicsSftpChannel" init-method="init" destroy-method="disconnection">
+        <property name="host" value="200.100.105.12"/>
+        <property name="port" value="22"/>
+        <property name="username" value="jeus" />
+        <property name="password" value="jeus" />
+    </bean>   
+</beans>
+**/
