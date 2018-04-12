@@ -46,4 +46,15 @@ public class BaseDao extends SqlSessionDaoSupport implements InitializingBean {
 		return (T) getSqlSession().selectList(sqlId, param);
 	}
 	
+	public <T> void getDataResultHandler(String sqlId, Object param, ResultHandler<T> handler) throws Exception {
+		try {
+			getSqlSession().select(sqlId, param, handler);			
+		}
+		catch(NullPointerException ne) {
+			LOGGER.error("NullPointException :: {}", ne.getMessage());			
+		}
+		catch(Exception ex) {
+			LOGGER.error("Exception :: {}", ex.getMessage());
+		}
+	}
 }
