@@ -10,22 +10,7 @@ import cmn.util.base.BaseConstants;
 import cmn.util.common.NullUtil;
 import cmn.util.exception.UtilException;
 
-/**
- * @Project : SEHATI Project
- * @Class : HttpUtil.java
- * @Description :
- * @Author : LGCNS
- * @Since : 2018. 1. 19.
- *
- * @Copyright (c) 2017 SEHATI All rights reserved.
- *----------------------------------------------------------
- * Modification Information
- *----------------------------------------------------------
- * Date            Modifier             Change Reason
- *----------------------------------------------------------
- *2018. 1. 19.          LGCNS           Initial
- *----------------------------------------------------------
- */
+
 public class HttpUtil {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtil.class);
