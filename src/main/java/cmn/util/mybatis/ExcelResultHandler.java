@@ -4,23 +4,20 @@ import java.util.Map;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import stis.framework.exception.BizException;
 import stis.framework.util.ExcelStyle;
 import stis.framework.util.ExcelUtil;
 import stis.framework.util.NullUtil;
 
-public class ExcelResultHandler<T> implements ResultHandler<Map<String, Object>> {
+public class ExcelResultHandler<T> implements ResultHandler<T> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExcelResultHandler.class);
 	
@@ -53,21 +50,11 @@ public class ExcelResultHandler<T> implements ResultHandler<Map<String, Object>>
 			createSheetTitle(this.workbook, headerName, headerColumns);			
 		}
 		catch(Exception ex) {
-			
+			LOGGER.error("Exception :: {}", ex.getMessage());
 		}
 	}
 	
-	@Override
-	public void handleResult(ResultContext<? extends Map<String, Object>> resultContext) {
-		Map<String, Object> result = resultContext.getResultObject();
-		try {
-			ExcelUtil.map2Excel(sheet, result, ExcelStyle.getDataStyle(workbook), rowNum);			
-		}
-		catch (Exception ex) {
-			
-		}
-		rowNum++;
-	}
+
 
 	/**
 	 * 
@@ -88,7 +75,7 @@ public class ExcelResultHandler<T> implements ResultHandler<Map<String, Object>>
 		/** Create Excel Header Name **/
 		if (!NullUtil.isNull(headerName)) {
 			Row row = sheet.createRow(rowNum);
-			Cell cell = row.getCell(0);
+			Cell cell = row.createCell(0);
 			cell.setCellValue(headerName);
 			cell.setCellStyle(ExcelStyle.getHeaderNameStyle(this.workbook));
 
@@ -101,11 +88,44 @@ public class ExcelResultHandler<T> implements ResultHandler<Map<String, Object>>
 			Row row = sheet.createRow(rowNum);
 			int idx = 0;
 			for (String headerColumn : headerColumns) {
-				Cell cell = row.getCell(idx++);
+				Cell cell = row.createCell(idx++);
 				cell.setCellStyle(ExcelStyle.getHeaderColumnStyle(this.workbook));
 				cell.setCellValue(headerColumn);
 			}
 			rowNum++;			
 		}
 	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public void handleResult(ResultContext<? extends T> resultContext) {
+		/** Map **/
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Result Count :: {}", resultContext.getResultCount());
+			LOGGER.debug("Result Class :: {}", resultContext.getClass());
+		}
+		
+		if (resultContext.getResultObject() instanceof Map) {
+			try {
+				ExcelUtil.map2Excel(sheet, (Map<String, Object>)resultContext.getResultObject(), ExcelStyle.getDataStyle(workbook), rowNum);			
+			}
+			catch (Exception ex) {
+				LOGGER.error("Excel file creation error :: {}", ex.getMessage());
+				throw new BizException("Excel file creation error");
+			}
+			rowNum++;
+		}
+		/** Value Object **/
+		else {
+			try {
+				ExcelUtil.object2Excel(sheet, resultContext.getResultObject(), ExcelStyle.getDataStyle(workbook), rowNum);			
+			}
+			catch (Exception ex) {
+				LOGGER.error("Excel file creation error :: {}", ex.getMessage());
+				throw new BizException("Excel file creation error");				
+			}
+			rowNum++;	
+		}
+		
+	}
+		
 }
