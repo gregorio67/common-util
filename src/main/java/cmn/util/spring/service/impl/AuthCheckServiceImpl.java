@@ -48,4 +48,13 @@ public class AuthCheckServiceImpl extends BaseService implements AuthCheckServic
 		<property name="defaultSql" value="#{system['auth.check.sql']}" />
 		<property name="resultColName" value="cnt" />
 	</bean>
+	
+auth.check.sql=SELECT COUNT(MENU_URI) CNT  \
+			   FROM TB_MENU A, \
+			   TB_USERROLE B, \
+			   TB_ROLE C \
+			   WHERE A.MENU_ID = C.MENU_ID \
+			   AND B.ROLE_ID = C.ROLE_ID \
+			   AND   B.USER_ID = ? \
+			   AND A.MENU_URI = ?	
 **/  
