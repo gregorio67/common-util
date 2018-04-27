@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import stis.framework.base.BaseService;
 import stis.framework.spring.service.BlockService;
-
+import stis.framework.util.NullUtil;
 
 public class BlockServiceImpl extends BaseService implements BlockService {
 	
@@ -56,6 +56,7 @@ public class BlockServiceImpl extends BaseService implements BlockService {
 	
 	@Override
 	public void selectBlockService() throws Exception {
+		
 		/** Get current Date **/
 		String date = sdf.format(new Date());
 		
@@ -65,12 +66,17 @@ public class BlockServiceImpl extends BaseService implements BlockService {
 
 		/** SQL Parameter **/
 		Object[] params = {date, date};
-		
-		this.blockServices = jdbcTemplate.queryForList(defaultSql, params);
-		
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Read Count :: {}, Read Data :: {}", blockServices.size(), blockServices.toString());
+		/** Occurred exception, just logging **/
+		try {
+			this.blockServices = jdbcTemplate.queryForList(defaultSql, params);			
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Read Count :: {}, Read Data :: {}", blockServices.size(), blockServices.toString());
+			}
 		}
+		catch(Exception ex) {
+			LOGGER.error("Error : {}", ex.getMessage());
+		}
+		
 //		this.blockServices = jdbcTemplate.query(defaultSql,
 //				new ResultSetExtractor<List<EgovMap>>() {
 //					@Override
@@ -115,19 +121,19 @@ public class BlockServiceImpl extends BaseService implements BlockService {
 	}
 	
 	public void init() throws Exception {
-		selectBlockService();
+		selectBlockService();			
 	}
 	
 	@Override
 	public void refresh() throws Exception {
 		synchronized(blockServices) {
 			blockServices.clear();
-			
-			selectBlockService();
+			selectBlockService();			
 		}
 	}
 		
 }
+
 
 
 /**
