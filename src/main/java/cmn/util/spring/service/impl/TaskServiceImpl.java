@@ -67,4 +67,51 @@ public class TaskServiceImpl extends BaseService implements TaskService {
 		AND TASK_NM = #{taskNm}		
 	</update>
 </mapper>
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:p="http://www.springframework.org/schema/p"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:task="http://www.springframework.org/schema/task"
+        xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+                http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+                http://www.springframework.org/schema/task	http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+
+	<task:annotation-driven  executor="taskExecutor" scheduler="scheduler"/>
+	<!-- mvc:annotation-driven>
+		<mvc:async-support default-timeout="2500" task-executor="taskExecutor">
+			<mvc:callable-interceptors>
+				<bean class="org.springframework.web.servlet.config.MvcNamespaceTests.TestCallableProcessingInterceptor" />
+			</mvc:callable-interceptors>
+			<mvc:deferred-result-interceptors>
+				<bean class="org.springframework.web.servlet.config.MvcNamespaceTests.TestDeferredResultProcessingInterceptor" />
+			</mvc:deferred-result-interceptors>
+		</mvc:async-support>
+	</mvc:annotation-driven-->	
+	
+	<!-- Async Task -->
+	<!-- task:annotation-driven scheduler="scheduler" executor="taskExecutor"/>
+	<task:scheduler id="scheduler" pool-size="10"/-->
+	
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+	    <property name="corePoolSize" value="100"/>
+	    <property name="maxPoolSize" value="100"/>
+	    <property name="queueCapacity" value="2000000000"/>
+	    <property name="keepAliveSeconds" value="120"/>
+	</bean> 
+	
+	<task:scheduler id="scheduler" pool-size="10"/>
+	
+	
+	    <!-- job bean -->
+    <bean id="scheduleJob" class="stis.sb.sample.service.impl.SchedulerServiceImpl" />
+    
+    <task:scheduled-tasks> <!-- scheduled job list -->
+        <task:scheduled ref="scheduleJob" method="executeJob" cron="0/30 * * * * ?"/>
+        <!-- add more job here -->
+    </task:scheduled-tasks>
+</beans>
 **/
