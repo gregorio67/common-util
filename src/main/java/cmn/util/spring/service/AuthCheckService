@@ -1,0 +1,5 @@
+public interface AuthCheckService {
+	
+	public int selectAuthCheck(Object[] params) throws Exception;
+
+}
