@@ -148,7 +148,7 @@ context-tcpcient.xml
 	public ModelAndView tcpClient(NexacroMapDTO dto, String strMessage) throws Exception {
 		ModelAndView modelAndView = NexacroUtil.getModelAndView(dto);
 
-		String sendMessage = "TEST11123234234김도연";
+		String sendMessage = "TEST11123234234";
 		String response = tcpClientService.sendMessage("sampleServer", sendMessage, true);
 		LOGGER.info("response :: {}", response);
 		Map<String, Object> map = new HashMap<String, Object>();
