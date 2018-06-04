@@ -242,3 +242,67 @@ public class RestClient implements InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 	}
 }
+
+
+/**
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<bean id="restHttpClient" class="cmn.util.net.http.client.CostomClosableHttpClient">
+		<property name="ignoreCertValidate" value="true"/>
+		<property name="sslProtocols" value="TLSv1.1, TLSv1.2" />
+		<property name="connectTimeout" value="3000" />
+		<property name="readTimeout" value="3000" />
+		<property name="maxPool" value="100" />
+		<property name="keyStoreLocation" value="D:/ssl/keystore" />
+		<property name="trustStoreLocation" value="D:/ssl/truststore" />
+		<property name="password" value="kyobo11!" />
+	</bean>
+
+
+    <bean id="restClient" class="cmn.util.spring.rest.RestClient" init-method="init">
+		<property name="connectTimeout" value="3000" />
+		<property name="readTimeout" value="3000" />
+		<property name="messageConverter" ref="jsonMessageConverter" />
+	</bean>
+
+	<bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/json;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+
+</beans>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+	<!-- Drug Safety Control Restful service List -->
+	<util:map id="dsc.dscService">
+		<entry key="host" value="http://10.255.114.91" />
+
+		<entry key="insertPrescriptionService" value="/api/dscService/insertPrescriptionService|POST" />
+
+		<entry key="updateCheckSaftyService" value="/api/dscService/updateCheckSaftyService|POST" />
+
+		<entry key="drugCheckSaftyService" value="/api/dscService/drugCheckSaftyService|POST" />
+	</util:map>
+</beans>
+**/
