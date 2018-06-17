@@ -38,8 +38,8 @@ public class AwsSNSSender {
 
 			@Override
 			public AWSCredentials getCredentials() {
-				BasicAWSCredentials creds = new BasicAWSCredentials("AKIAJSRB4DKS4CEHO5VQ",
-						"qotNYnCbWdZCgMCOyCR7utIqJWR4UOU2OitdlXz1");
+				BasicAWSCredentials creds = new BasicAWSCredentials("clientId",
+						"clientSecurity");
 				return creds;
 			}
 
