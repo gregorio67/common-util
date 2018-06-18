@@ -80,7 +80,7 @@ public class AwsSNSSender {
 			}
 		}
 		String message = String.valueOf(snsMap.get("message"));
-		// String phoneNumber = "+821096463649";
+		
 		String phoneNumber = String.valueOf(snsMap.get("phoneNumber"));
 
 		Map<String, MessageAttributeValue> smsAttributes = new HashMap<String, MessageAttributeValue>();
